@@ -41,8 +41,13 @@ export default function AdminDashboard() {
     if (!selectedDossier) return;
     updateDossierStatus(selectedDossier.id, "Approved");
     setApplications(getStoredDossiers());
-    await triggerWhatsAppReceipt(selectedDossier.name, "+91 98765 43210", "45,000");
-    alert("Success: Application Approved and staged for PFMS CSV export.");
+    
+    // 1. REAL WHATSAPP APPROVAL INTEGRATION
+    const testPhoneNumber = "919876543210"; // Replace with your own phone number for the live hackathon demo
+    const message = `🏛️ *Ministry of Tribal Affairs*\n\nDear ${selectedDossier.name}, your scholarship application (ID: ${selectedDossier.id}) has been *APPROVED* ✅.\n\nAn amount of ₹45,000 is staged for DBT transfer to your account ending in ${selectedDossier.financials.account.slice(-4)}.`;
+    
+    window.open(`https://wa.me/${testPhoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
+    
     setSelectedDossier(null);
   };
 
@@ -53,12 +58,17 @@ export default function AdminDashboard() {
     }
     updateDossierStatus(selectedDossier.id, "Rejected");
     setApplications(getStoredDossiers());
-    alert(`Application ${selectedDossier.id} rejected. Reason logged: "${rejectReason}".`);
+    
+    // 2. REAL WHATSAPP REJECTION/REWORK INTEGRATION
+    const testPhoneNumber = "919876543210"; // Replace with your own phone number for the live hackathon demo
+    const message = `🏛️ *Ministry of Tribal Affairs*\n\nDear ${selectedDossier.name}, your scholarship application (ID: ${selectedDossier.id}) requires *REWORK* ❌.\n\n*Reason:* ${rejectReason}\n\nPlease login to the TribalGrant portal to re-upload clear documents.`;
+    
+    window.open(`https://wa.me/${testPhoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
+    
     setShowRejectModal(false);
     setRejectReason("");
     setSelectedDossier(null);
   };
-
   const generatePFMS = () => {
     const approvedApps = applications.filter(app => app.status === "Approved" || app.status === "Pending");
     const csvHeader = "Dossier ID,Applicant Name,Scheme,Bank Name,Account Number,IFSC Code,Amount\n";
