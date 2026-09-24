@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // app/admin/page.tsx
 "use client";
 
@@ -7,6 +8,17 @@ import {
   ShieldAlert, Lock, CheckCircle2, Eye, AlertTriangle, Sparkles, 
   Building2, ChevronLeft, Download, Search, 
   History, FileSearch, Users, LogOut, FileCheck, X, Smartphone, Mail, BellRing
+=======
+"use client";
+
+import React, { useState, useEffect } from "react";
+import { getStoredDossiers, updateDossierStatus, Dossier } from "@/app/utils/dossierStore";
+import { triggerWhatsAppReceipt } from "@/app/actions/motaCore";
+import { 
+  ShieldAlert, Lock, CheckCircle2, Eye, AlertTriangle, 
+  Building2, ChevronLeft, Download, Search, 
+  History, FileSearch, Users, LogOut, ExternalLink, FileCheck, X
+>>>>>>> fea7df80e527b4358893047b961ae75fc9c8dea3
 } from "lucide-react";
 
 export default function AdminDashboard() {
@@ -19,6 +31,7 @@ export default function AdminDashboard() {
   const [selectedDossier, setSelectedDossier] = useState<Dossier | null>(null);
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [rejectReason, setRejectReason] = useState("");
+<<<<<<< HEAD
   const [reasonMode, setReasonMode] = useState<"reject" | "resubmit">("reject");
   
   const [previewDoc, setPreviewDoc] = useState<{ title: string; filename: string; clarity: number; previewUrl?: string } | null>(null);
@@ -90,6 +103,58 @@ export default function AdminDashboard() {
     setShowRejectModal(true);
   };
 
+=======
+  
+  // Active document preview modal state
+  const [previewDoc, setPreviewDoc] = useState<{ title: string; filename: string; clarity: number } | null>(null);
+
+  useEffect(() => {
+    setApplications(getStoredDossiers());
+  }, []);
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email === "officer@tribal.gov.in" && password === "sih2026") {
+      setIsAuthenticated(true);
+      setError("");
+    } else {
+      setError("Invalid government credentials. Access logged.");
+    }
+  };
+
+  const handleApprove = async () => {
+    if (!selectedDossier) return;
+    updateDossierStatus(selectedDossier.id, "Approved");
+    setApplications(getStoredDossiers());
+    
+    // 1. REAL WHATSAPP APPROVAL INTEGRATION
+    const testPhoneNumber = "919876543210"; // Replace with your own phone number for the live hackathon demo
+    const message = `🏛️ *Ministry of Tribal Affairs*\n\nDear ${selectedDossier.name}, your scholarship application (ID: ${selectedDossier.id}) has been *APPROVED* ✅.\n\nAn amount of ₹45,000 is staged for DBT transfer to your account ending in ${selectedDossier.financials.account.slice(-4)}.`;
+    
+    window.open(`https://wa.me/${testPhoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
+    
+    setSelectedDossier(null);
+  };
+
+  const handleRejectSubmit = () => {
+    if (!selectedDossier || !rejectReason) {
+      alert("Please enter a mandatory reason code.");
+      return;
+    }
+    updateDossierStatus(selectedDossier.id, "Rejected");
+    setApplications(getStoredDossiers());
+    
+    // 2. REAL WHATSAPP REJECTION/REWORK INTEGRATION
+    const testPhoneNumber = "919876543210"; // Replace with your own phone number for the live hackathon demo
+    const message = `🏛️ *Ministry of Tribal Affairs*\n\nDear ${selectedDossier.name}, your scholarship application (ID: ${selectedDossier.id}) requires *REWORK* ❌.\n\n*Reason:* ${rejectReason}\n\nPlease login to the TribalGrant portal to re-upload clear documents.`;
+    
+    window.open(`https://wa.me/${testPhoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
+    
+    setShowRejectModal(false);
+    setRejectReason("");
+    setSelectedDossier(null);
+  };
+>>>>>>> fea7df80e527b4358893047b961ae75fc9c8dea3
   const generatePFMS = () => {
     const approvedApps = applications.filter(app => app.status === "Approved" || app.status === "Pending");
     const csvHeader = "Dossier ID,Applicant Name,Scheme,Bank Name,Account Number,IFSC Code,Amount\n";
@@ -145,7 +210,11 @@ export default function AdminDashboard() {
             </button>
           </form>
           <div className="mt-6 pt-4 border-t border-slate-100 text-center">
+<<<<<<< HEAD
             <p className="text-[10px] text-slate-400 font-mono">Credentials are configured in .env.local</p>
+=======
+            <p className="text-[10px] text-slate-400 font-mono">Demo Credentials: officer@tribal.gov.in / sih2026</p>
+>>>>>>> fea7df80e527b4358893047b961ae75fc9c8dea3
           </div>
         </div>
       </div>
@@ -162,7 +231,11 @@ export default function AdminDashboard() {
             <p className="text-[10px] text-slate-500 font-medium">Zero-Trust Architecture: Cryptographic Hash Verification Active</p>
           </div>
         </div>
+<<<<<<< HEAD
         <button onClick={async () => { await fetch("/api/auth", { method: "DELETE" }); setIsAuthenticated(false); }} className="text-xs font-semibold text-rose-600 hover:text-rose-700 bg-rose-50 border border-rose-100 px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm">
+=======
+        <button onClick={() => setIsAuthenticated(false)} className="text-xs font-semibold text-rose-600 hover:text-rose-700 bg-rose-50 border border-rose-100 px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm">
+>>>>>>> fea7df80e527b4358893047b961ae75fc9c8dea3
           <LogOut className="w-3.5 h-3.5" /> Sign Out
         </button>
       </header>
@@ -247,6 +320,7 @@ export default function AdminDashboard() {
             </div>
           </div>
         ) : (
+<<<<<<< HEAD
           <div className="animate-in slide-in-from-bottom-4 fade-in h-[85vh] flex flex-col">
             <button onClick={() => setSelectedDossier(null)} className="mb-4 text-sm font-semibold text-slate-600 hover:text-indigo-700 flex items-center gap-1 transition flex-shrink-0">
               <ChevronLeft className="w-4 h-4" /> Back to Queue
@@ -257,6 +331,19 @@ export default function AdminDashboard() {
               {previewDoc && (
                 <div className="absolute inset-0 z-50 bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in">
                   <div className="bg-white rounded-3xl shadow-2xl border border-slate-200 max-w-2xl w-full p-6 space-y-4">
+=======
+          <div className="animate-in slide-in-from-bottom-4 fade-in">
+            <button onClick={() => setSelectedDossier(null)} className="mb-4 text-sm font-semibold text-slate-600 hover:text-indigo-700 flex items-center gap-1 transition">
+              <ChevronLeft className="w-4 h-4" /> Back to Queue
+            </button>
+            
+            <div className="bg-white/90 backdrop-blur-2xl border border-white rounded-3xl shadow-2xl overflow-hidden flex flex-col relative">
+              
+              {/* Document Preview Modal Overlay */}
+              {previewDoc && (
+                <div className="absolute inset-0 z-50 bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in">
+                  <div className="bg-white rounded-3xl shadow-2xl border border-slate-200 max-w-lg w-full p-6 space-y-4">
+>>>>>>> fea7df80e527b4358893047b961ae75fc9c8dea3
                     <div className="flex justify-between items-center border-b border-slate-100 pb-3">
                       <div>
                         <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-widest block">Secure S3 Storage Viewer</span>
@@ -278,6 +365,7 @@ export default function AdminDashboard() {
                       </div>
                     </div>
 
+<<<<<<< HEAD
                     <div className="w-full bg-slate-900 rounded-2xl flex items-center justify-center p-2 min-h-[300px] max-h-[500px] overflow-auto shadow-inner relative border border-slate-800">
                       {previewDoc.previewUrl ? (
                         <img 
@@ -292,6 +380,13 @@ export default function AdminDashboard() {
                             <p className="text-xs text-slate-400 mt-1">Image data missing in local storage.</p>
                         </div>
                       )}
+=======
+                    <div className="w-full h-56 bg-slate-900 rounded-2xl flex flex-col items-center justify-center text-white p-6 text-center shadow-inner relative overflow-hidden">
+                      <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                      <FileCheck className="w-12 h-12 text-indigo-400 mb-2 animate-bounce" />
+                      <p className="text-sm font-bold">{previewDoc.filename}</p>
+                      <p className="text-[11px] text-slate-400 mt-1">Zero-Trust Cryptographic Hash Verified • Ministry of Tribal Affairs</p>
+>>>>>>> fea7df80e527b4358893047b961ae75fc9c8dea3
                     </div>
 
                     <div className="pt-2 flex justify-end">
@@ -303,6 +398,7 @@ export default function AdminDashboard() {
                 </div>
               )}
 
+<<<<<<< HEAD
               <div className="border-b border-slate-100 px-8 py-6 flex justify-between items-start bg-slate-50/50 flex-shrink-0">
                 <div>
                   <div className="flex items-center gap-3 mb-2">
@@ -416,10 +512,50 @@ export default function AdminDashboard() {
                           title="View Document"
                         >
                           <Eye className="w-4 h-4" />
+=======
+              {selectedDossier.fraudStatus !== "Clean" && (
+                <div className="bg-rose-600 text-white px-6 py-3.5 flex items-center gap-3 text-sm font-bold shadow-inner">
+                  <AlertTriangle className="w-5 h-5 flex-shrink-0" /> 
+                  CRITICAL FRAUD ALERT: {selectedDossier.fraudStatus}.
+                </div>
+              )}
+
+              <div className="border-b border-slate-100 px-8 py-6 flex justify-between items-center bg-slate-50/50">
+                <div>
+                  <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">{selectedDossier.name}</h2>
+                  <p className="text-xs text-slate-500 font-mono mt-1">Dossier ID: {selectedDossier.id} • Secure Hash: {selectedDossier.hash}</p>
+                </div>
+                <div className="bg-indigo-50 border border-indigo-100 text-indigo-700 px-4 py-2 rounded-xl text-xs font-bold shadow-sm">
+                  WASM Clarity Index: {selectedDossier.aiScore}%
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 p-8">
+                <div className="col-span-2 space-y-6">
+                  
+                  <h3 className="text-sm font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2">
+                    <FileCheck className="w-4 h-4 text-indigo-600"/> Uploaded Evidence Vault
+                  </h3>
+                  <div className="grid grid-cols-2 gap-3">
+                    {selectedDossier.documents.map((doc: any, index: number) => (
+                      <div key={index} className="bg-slate-50 border border-slate-200/80 rounded-xl p-3 flex items-center justify-between shadow-sm">
+                        <div className="overflow-hidden">
+                          <span className="text-xs font-bold text-slate-800 block truncate">{doc.title}</span>
+                          <span className="text-[10px] text-slate-400 font-mono block truncate">📄 {doc.filename} ({doc.clarity}% Clarity)</span>
+                        </div>
+                        <button 
+                          type="button"
+                          onClick={() => setPreviewDoc(doc)}
+                          className="p-2 bg-white border border-slate-200 hover:bg-indigo-50 hover:border-indigo-200 text-indigo-600 rounded-lg transition flex-shrink-0 ml-2 shadow-sm cursor-pointer"
+                          title="Open Document Preview"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+>>>>>>> fea7df80e527b4358893047b961ae75fc9c8dea3
                         </button>
                       </div>
                     ))}
                   </div>
+<<<<<<< HEAD
                 </section>
 
                 <section>
@@ -536,6 +672,62 @@ export default function AdminDashboard() {
                 {showRejectModal && (
                   <div className="absolute bottom-[calc(100%+16px)] right-8 bg-white border border-slate-200 shadow-2xl rounded-2xl p-5 w-96 animate-in slide-in-from-bottom-2 z-20">
                     <label className="block text-xs font-bold text-slate-800 mb-2">{reasonMode === "reject" ? "Mandatory reason for rejection" : "Reason for resubmission"}</label>
+=======
+
+                  <h3 className="text-sm font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2 mt-6">
+                    <FileSearch className="w-4 h-4 text-indigo-600"/> OCR Extraction Engine vs. User Input
+                  </h3>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-5 shadow-sm">
+                      <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Applicant Typed Data</div>
+                      <div className="space-y-3">
+                        <div><span className="text-xs text-slate-500 block mb-0.5">Full Name</span><span className="text-sm font-bold text-slate-900">{selectedDossier.typedData.name}</span></div>
+                        <div><span className="text-xs text-slate-500 block mb-0.5">Declared Income</span><span className="text-sm font-bold text-slate-900">{selectedDossier.typedData.income}</span></div>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-indigo-50/60 border border-indigo-100 rounded-2xl p-5 relative shadow-sm">
+                      <div className="absolute top-4 right-4 text-[9px] font-extrabold bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded-md border border-indigo-200">AI EXTRACTED</div>
+                      <div className="text-[10px] font-bold text-indigo-600 uppercase tracking-widest mb-3">Document OCR Output</div>
+                      <div className="space-y-3">
+                        <div><span className="text-xs text-slate-500 block mb-0.5">Extracted Name</span><span className="text-sm font-bold text-indigo-950">{selectedDossier.extractedData.name}</span></div>
+                        <div><span className="text-xs text-slate-500 block mb-0.5">Extracted Income</span><span className="text-sm font-bold text-emerald-700">₹{selectedDossier.extractedData.income}</span></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <h3 className="text-sm font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2 mt-8">
+                    <Building2 className="w-4 h-4 text-indigo-600"/> Verified Banking Details
+                  </h3>
+                  <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-5 flex flex-wrap justify-between items-center text-sm shadow-sm">
+                    <div><span className="block text-xs text-slate-400 font-semibold uppercase">Bank</span><span className="font-bold text-slate-900">{selectedDossier.financials.bank}</span></div>
+                    <div><span className="block text-xs text-slate-400 font-semibold uppercase">Account</span><span className="font-mono font-bold text-slate-900">{selectedDossier.financials.account}</span></div>
+                    <div><span className="block text-xs text-slate-400 font-semibold uppercase">IFSC</span><span className="font-mono font-bold text-slate-900">{selectedDossier.financials.ifsc}</span></div>
+                  </div>
+                </div>
+
+                <div className="col-span-1 border-l border-slate-200/60 pl-8">
+                  <h3 className="text-sm font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2 mb-6">
+                    <History className="w-4 h-4 text-slate-500"/> System Audit Log
+                  </h3>
+                  <div className="space-y-6">
+                    {selectedDossier.auditLog.map((log: any, i: number) => (
+                      <div key={i} className="relative pl-4 border-l-2 border-indigo-500">
+                        <div className="absolute w-2.5 h-2.5 bg-indigo-600 rounded-full -left-[6px] top-1 ring-4 ring-indigo-50"></div>
+                        <div className="text-[10px] text-indigo-600 font-mono font-bold">{log.time}</div>
+                        <div className="text-xs font-semibold text-slate-700 mt-0.5">{log.action}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-slate-50 px-8 py-5 border-t border-slate-100 flex justify-end gap-3 relative">
+                {showRejectModal ? (
+                  <div className="absolute bottom-full right-8 mb-3 bg-white border border-slate-200 shadow-2xl rounded-2xl p-5 w-96 animate-in slide-in-from-bottom-2 z-20">
+                    <label className="block text-xs font-bold text-slate-800 mb-2">Mandatory Reason for Rework/Rejection</label>
+>>>>>>> fea7df80e527b4358893047b961ae75fc9c8dea3
                     <textarea 
                       value={rejectReason} 
                       onChange={(e) => setRejectReason(e.target.value)}
@@ -544,6 +736,7 @@ export default function AdminDashboard() {
                     ></textarea>
                     <div className="flex justify-end gap-2">
                       <button onClick={() => setShowRejectModal(false)} className="px-4 py-2 text-xs font-semibold text-slate-500 hover:bg-slate-100 rounded-xl transition">Cancel</button>
+<<<<<<< HEAD
                       <button onClick={handleRejectSubmit} className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold shadow-md transition flex items-center gap-2">
                          <BellRing className="w-3 h-3" /> {reasonMode === "reject" ? "Reject & Notify" : "Request Rework & Notify"}
                       </button>
@@ -578,10 +771,24 @@ export default function AdminDashboard() {
                     <BellRing className="w-4 h-4" /> Auto-Notify & Approve
                   </button>
                 </div>
+=======
+                      <button onClick={handleRejectSubmit} className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold shadow-md transition">Confirm Rejection</button>
+                    </div>
+                  </div>
+                ) : null}
+
+                <button onClick={() => setShowRejectModal(true)} className="px-5 py-3 bg-white border border-slate-300 text-amber-700 hover:bg-amber-50 rounded-xl text-sm font-bold transition flex items-center gap-2 shadow-sm">
+                  <AlertTriangle className="w-4 h-4 text-amber-600" /> Reject / Rework
+                </button>
+                <button onClick={handleApprove} className="px-6 py-3 bg-indigo-700 hover:bg-indigo-800 text-white rounded-xl text-sm font-bold shadow-lg shadow-indigo-600/25 transition flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4" /> Approve & Stage for PFMS
+                </button>
+>>>>>>> fea7df80e527b4358893047b961ae75fc9c8dea3
               </div>
             </div>
           </div>
         )}
+<<<<<<< HEAD
         {actionModal && actionModal.type !== "approve" && actionModal.type !== "result" && (
           <div className="fixed inset-0 z-[100] bg-slate-950/45 backdrop-blur-sm flex items-center justify-center p-4">
             <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl border border-white p-6">
@@ -622,6 +829,8 @@ export default function AdminDashboard() {
             </div>
           </div>
         )}
+=======
+>>>>>>> fea7df80e527b4358893047b961ae75fc9c8dea3
       </main>
     </div>
   );
